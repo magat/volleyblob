@@ -16,48 +16,45 @@ var circle = new PIXI.Graphics();
 circle.beginFill(0x450000).drawCircle(INIT_CIRCLE_X, INIT_CIRCLE_Y, CIRCLE_RADIUS).endFill();
 background.addChild(circle);
 
-function keyboard(keyCode) {
-  var key = {};
-  key.code = keyCode;
-  key.isDown = false;
-  key.isUp = true;
-  key.press = undefined;
-  key.release = undefined;
+function keyboard() {
+  var kb = {left: 37, up: 38, right: 39, down: 40};
+  kb.pressed = {};
+  kb.pressed[kb.left] = false;
+  kb.pressed[kb.up] = false;
+  kb.pressed[kb.right] = false;
+  kb.pressed[kb.down] = false;
+  kb.press = undefined;
+  kb.release = undefined;
+
   //The `downHandler`
-  key.downHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isUp && key.press) key.press();
-      key.isDown = true;
-      key.isUp = false;
+  var downHandler = function(event) {
+    if (event.keyCode >= this.left && event.keyCode <= this.down) {
+			if(!this.pressed[event.keyCode] && this.press) this.press(event.keyCode);
+			this.pressed[event.keyCode] = true;
     }
     event.preventDefault();
   };
 
   //The `upHandler`
-  key.upHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isDown && key.release) key.release();
-      key.isDown = false;
-      key.isUp = true;
+  var upHandler = function(event) {
+    if (event.keyCode >= this.left && event.keyCode <= this.down) {
+			if(this.pressed[event.keyCode] && this.release) this.release(event.keyCode);
+			this.pressed[event.keyCode] = false;
     }
     event.preventDefault();
   };
 
   //Attach event listeners
   window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
+    "keydown", downHandler.bind(kb), false
   );
   window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
+    "keyup", upHandler.bind(kb), false
   );
-  return key;
+  return kb;
 }
 
-
-var left = keyboard(37),
-    up = keyboard(38),
-    right = keyboard(39),
-    down = keyboard(40);
+var ctrl = keyboard();
 
 function loop(){
   requestAnimationFrame(loop);
@@ -65,35 +62,57 @@ function loop(){
   renderer.render(stage);
 }
 
-circle.vx = 0;
-circle.vy = 0;
-var cmdLeft = 0, 
-    cmdRight = 0,
-    cmdTop = 0,
-    cmdBottom = 0;
+
+var g = 9.81;
+var jump = 75;
+var speed = 10;
+var vx = 0;
+var vy = 0;
 
 
-left.press = function(){
-  goLeft = true; 
-}
-left.release = function(){
-
-}
-
-right.press = function(){
-  goRight = true; 
-}
-
+var GROUND = 580 - (INIT_CIRCLE_Y + CIRCLE_RADIUS / 2);
+var WALL_LEFT =  - INIT_CIRCLE_X + CIRCLE_RADIUS;
+var WALL_RIGHT = 800 - (INIT_CIRCLE_X + CIRCLE_RADIUS);
 function nextFrame(){
-  circle.vy = 0;
-  circle.vx = 0;
-  // gravity applies if position > bottom
-  if(circle.position.y < (580 - INIT_CIRCLE_Y - CIRCLE_RADIUS / 2)){
-    circle.vy = 5;
-  } 
+ 
+	vx = 0; 
+	// gravity applies if position > bottom
+  if(circle.position.y < GROUND){
+    vy += g;
+  } else {
+		// if on the ground, no gravity
+		vy = 0;
+		// jumping only applies when on the ground
+		if(ctrl.pressed[ctrl.up]){
+			vy = -jump;
+		}
+	} 
 
-  circle.position.x += circle.vx;
-  circle.position.y += circle.vy;
+	// left and right movement
+	if(circle.position.x > WALL_LEFT){
+		if(ctrl.pressed[ctrl.left]){
+			vx = -speed;
+		}
+	} 
+	if(circle.position.x < WALL_RIGHT){
+		if(ctrl.pressed[ctrl.right]){
+			vx = speed;
+		}
+	}
+	// Update the circle position according to new velocity
+  circle.position.x += vx;
+  circle.position.y += vy;
+
+	if(circle.position.x < WALL_LEFT){
+		circle.position.x = WALL_LEFT;
+	}
+	if(circle.position.x > WALL_RIGHT){
+		circle.position.x = WALL_RIGHT;
+	}
+
+	if(circle.position.y > GROUND){
+		circle.position.y = GROUND;
+	}
 }
 
 loop();
