@@ -27,6 +27,19 @@ function keyboard() {
 		event.preventDefault();
 	};
 
+  kb.goup = function(){
+    return kb.pressed[kb.up];
+  }
+  kb.godown = function(){
+    return kb.pressed[kb.down];
+  }
+  kb.goleft = function(){
+    return kb.pressed[kb.left];
+  }
+  kb.goright = function(){
+    return kb.pressed[kb.right];
+  }
+
 	//Attach event listeners
 	window.addEventListener(
 			"keydown", downHandler.bind(kb), false
