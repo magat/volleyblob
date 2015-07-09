@@ -30,9 +30,9 @@ function loop(){
 }
 
 
-var g = 9.81;
-var jump = 75;
-var speed = 10;
+var g = 1;
+var jump = 15;
+var speed = 5;
 
 circle.vx = 0;
 circle.vy = 0;
@@ -52,13 +52,15 @@ function nextFrame(){
 	} 
 
 	// left and right movement
-	circle.vx = 0; 
-	if(ctrl.pressed[ctrl.left]){
-		circle.vx = -speed;
-	}
-	if(ctrl.pressed[ctrl.right]){
-		circle.vx = speed;
-	}
+  if(circle.position.y > (GROUND-20)){
+    circle.vx = 0; 
+    if(ctrl.pressed[ctrl.left]){
+      circle.vx = -speed;
+    }
+    if(ctrl.pressed[ctrl.right]){
+      circle.vx = speed;
+    }
+  }
 
 	// compute the new circle position according to new velocity
 	var x = circle.position.x + circle.vx;
