@@ -20,12 +20,30 @@ var circle = new PIXI.Graphics();
 circle.beginFill(0x450000).drawCircle(INIT_CIRCLE_X, INIT_CIRCLE_Y, CIRCLE_RADIUS).endFill();
 background.addChild(circle);
 
-var p1 = new Player(circle);
+//var p1 = new Player(circle);
+var ball = new Ball(circle);
+var kb = keyboard();
+kb.press = function(key){
+  switch(key){
+    case this.up:
+      ball.direction.y = -1;
+      break;
+    case this.down:
+      ball.direction.y = 1;
+      break;
+    case this.left:
+      ball.direction.x = -1;
+      break;
+    case this.right:
+      ball.direction.x = 1;
+      break;
+  }
 
+}
 function loop(){
 	requestAnimationFrame(loop);
 	
-  p1.refresh();
+  ball.refresh();
   
   renderer.render(stage);
 }
