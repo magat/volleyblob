@@ -9,7 +9,10 @@ function Ball(avatar){
     x: 0,
     y: 0
   };
-  this.push = false;
+  this.push = {
+		x: false,
+		y: false
+	};
 }
 
 Ball.prototype.refresh = function(){
@@ -20,38 +23,38 @@ Ball.prototype.refresh = function(){
 	if(pos.y < GROUND){
     v.y += gravity;
 	} else {
-    v.x = 0;
     v.y = 0;
     // on the ground, lose horizontal speed
-    this.direction.x = 0.75 * this.direction.x;
+    v.x = 0.75 * v.x;
   }
 
   // apply the direction to the velocity
-  if(this.push){
+  if(this.push.x){
     v.x += this.direction.x * jump;
-    v.y += this.direction.y * jump;
-    this.push = false;
+    this.push.x = false;
   }
-
+  if(this.push.y){
+    v.y += this.direction.y * jump;
+    this.push.y = false;
+	}
 	// compute the new avatar position according to new velocity
 	var x = pos.x + v.x;
   var	y = pos.y + v.y;
 
-
   if(x <= WALL_LEFT){
     x = WALL_LEFT;
-    this.direction.x = Math.abs(this.direction.x);
-    this.push = true;
+    this.direction.x = Math.abs(this.direction.x) * 0.75;
+    this.push.x = true;
   }
   if(x >= WALL_RIGHT){
     x = WALL_RIGHT;
-    this.direction.x = - Math.abs(this.direction.x);
-    this.push = true;
+    this.direction.x = - Math.abs(this.direction.x) * 0.75;
+    this.push.x = true;
   }
   if(y >= GROUND){
     y = GROUND;
-    this.direction.y = this.direction.y * -0.75;
-    this.push = true;
+    this.direction.y = v.y > 5 ? (- Math.abs(v.y) * 0.75 / jump) : 0;
+    this.push.y = true;
   } 
 
 	pos.x = x;

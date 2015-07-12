@@ -23,29 +23,33 @@ background.addChild(circle);
 //var p1 = new Player(circle);
 var ball = new Ball(circle);
 var kb = keyboard();
+function push(ball, axis, val){
+	ball.push[axis] = true;
+	ball.direction[axis] = val;
+}
 kb.press = function(key){
-  switch(key){
-    case this.up:
-      ball.direction.y = -1;
-      break;
-    case this.down:
-      ball.direction.y = 1;
-      break;
-    case this.left:
-      ball.direction.x = -1;
-      break;
-    case this.right:
-      ball.direction.x = 1;
-      break;
-  }
+	switch(key){
+		case this.up:
+			push(ball, "y", -1);
+			break;
+		case this.down:
+			push(ball, "y", 1);
+			break;
+		case this.left:
+			push(ball, "x", -1);
+			break;
+		case this.right:
+			push(ball, "x", 1);
+			break;
+	}
 
 }
 function loop(){
 	requestAnimationFrame(loop);
-	
-  ball.refresh();
-  
-  renderer.render(stage);
+
+	ball.refresh();
+
+	renderer.render(stage);
 }
 
 var gravity = 1;
