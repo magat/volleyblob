@@ -30,6 +30,10 @@ var player = createPlayer();
 player.place(W/2 - 25, 500);
 sky.addChild(player.avatar);
 var bigBounds;
+
+var PLAYER_FORCE = 5;
+var PLAYER_INERTIA = 5;
+
 function loop(){
   requestAnimationFrame(loop);
 
@@ -44,21 +48,12 @@ function loop(){
 
     // compute the force applied to the ball
     var dir = new PIXI.Point(0,0);
-    if(player.position.y > ball.position.y){
-      dir.y = -10;
-    } else {
+		var posX = ball.center().x - player.center().x;		   
+		var posY = ball.center().y - player.center().y;		   
 
-      // ball hit the left side 
-      if(ball.position.x <= bigBounds.x){
-        dir.x = -10;
-      } 
-      // ball hit the right side 
-      if(ball.position.x >= bigBounds.x + BALL_RADIUS *2){
-        dir.x = 10;
-      }
-    }
-    dir.x += player.velocity.x;
-    dir.y += player.velocity.y;
+		dir.x = -Math.sign(posX) * PLAYER_FORCE + Math.sign(player.velocity.x) * PLAYER_INERTIA;	
+		dir.y = -Math.sign(posY) * PLAYER_FORCE + Math.sign(player.velocity.y) * PLAYER_INERTIA;	
+		
 
     ball.push(dir.x, dir.y);
   } 

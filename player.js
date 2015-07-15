@@ -1,4 +1,4 @@
-var JUMP = new PIXI.Point(5,-15);
+var JUMP = new PIXI.Point(5,-20);
 var FRICTION = 0.1;
 var MIN_VELOCITY = 0.5;
 
@@ -58,6 +58,9 @@ function createPlayer(){
     }
   };
 
+	p.center = function(){
+		return new PIXI.Point(this.position.x + 25, this.position.y + 50);
+	}
   return p;
 }
 
