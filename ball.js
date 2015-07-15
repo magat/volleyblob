@@ -23,6 +23,5 @@ function createBall(){
 			this.push(0, GRAVITY);
 		}
 	};
-
 	return b;
 }

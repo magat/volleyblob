@@ -53,6 +53,7 @@ function createPlayer(){
       p.velocity.x = 0;
     }
   };
+
   return p;
 }
 

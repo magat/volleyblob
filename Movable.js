@@ -40,6 +40,5 @@ Movable.prototype.refresh = function(){
 		if(this.onRefresh !== undefined){
 			this.onRefresh.apply(this);
 		}
-
 	}
 }
