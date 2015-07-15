@@ -34,6 +34,10 @@ function createPlayer(){
       dir.y = GRAVITY;
     }
 
+    // The walls limit our moves
+    this.position.x = Math.max(WALL_LEFT, this.position.x);
+    this.position.x = Math.min(WALL_RIGHT - 50, this.position.x);
+
     this.push(dir.x, dir.y);
     dir.x = 0;
     dir.y = 0;

@@ -3,6 +3,9 @@ var H = 600;
 var GROUND_THICKNESS = 10;
 var GRAVITY = 1;
 
+var WALL_LEFT = 0;
+var WALL_RIGHT = W;
+
 var renderer = new PIXI.autoDetectRenderer(W, H, {backgroundColor: 0xFFFFFF});
 var stage = new PIXI.Container();
 
